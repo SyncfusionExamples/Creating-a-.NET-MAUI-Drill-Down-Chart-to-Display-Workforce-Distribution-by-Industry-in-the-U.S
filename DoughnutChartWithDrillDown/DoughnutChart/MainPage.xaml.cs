@@ -38,19 +38,17 @@ namespace DoughnutChart
     {
         public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
-            //            int value1 = 0;
-            //            value1 = (int)value;
-            //#if MACCATALYST
+            double size = 0d;
 
-            //            value1 = value1 / 4;
-            //#endif
-            //            return value1;
+            if(value == null)
+            {
+                return size;
+            }
 
-            double size;
-            string para = value.ToString();
+            string? para = value.ToString();
 
 #if MACCATALYST
-            if(value != null && double.TryParse(para, out size))
+            if(string.IsNullOrEmpty(para) && double.TryParse(para, out size))
             {
                 return (double)value / 2;
             }
