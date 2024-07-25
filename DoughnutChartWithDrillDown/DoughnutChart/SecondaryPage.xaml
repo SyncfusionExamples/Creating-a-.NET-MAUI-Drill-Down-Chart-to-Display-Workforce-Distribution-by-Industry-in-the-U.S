@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DoughnutChart.SecondaryPage"
+             xmlns:chart="clr-namespace:Syncfusion.Maui.Charts;assembly=Syncfusion.Maui.Charts"
+             xmlns:local="clr-namespace:DoughnutChart">
+
+    <Grid>
+        <chart:SfCartesianChart x:Name="chart"
+                                HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" >
+
+            <chart:SfCartesianChart.Title>
+                <Label x:Name="titleLabel"
+                    FontSize="{OnPlatform Android=15, Default=20, iOS=15}" 
+                    FontAttributes="Bold" 
+                    HorizontalTextAlignment="Center" />
+            </chart:SfCartesianChart.Title>
+
+            <chart:SfCartesianChart.XAxes >
+                <chart:CategoryAxis ShowMajorGridLines="False">
+                    <chart:CategoryAxis.Title>
+                        <chart:ChartAxisTitle Text="Category of persons" />
+                    </chart:CategoryAxis.Title>
+                </chart:CategoryAxis>
+            </chart:SfCartesianChart.XAxes>
+
+            <chart:SfCartesianChart.YAxes>
+                <chart:NumericalAxis x:Name="yAxis" Maximum="{OnPlatform Default=70, Android=80, iOS=80}" Interval="{OnPlatform WinUI=10}">
+                    <chart:NumericalAxis.Title>
+                        <chart:ChartAxisTitle Text="Percentage" />
+                    </chart:NumericalAxis.Title>
+                </chart:NumericalAxis>
+            </chart:SfCartesianChart.YAxes>
+
+            <chart:ColumnSeries x:Name="series"
+                             XBindingPath="Gender"
+                             YBindingPath="Percent"
+                             LabelContext="Percentage"
+                             ShowDataLabels="True"
+                             ItemsSource="{Binding Collections}"
+                             Width="0.2" >
+
+                <chart:ColumnSeries.DataLabelSettings>
+                    <chart:CartesianDataLabelSettings UseSeriesPalette="False" LabelPlacement="Outer" />
+                </chart:ColumnSeries.DataLabelSettings>
+            </chart:ColumnSeries>
+
+        </chart:SfCartesianChart>
+    </Grid>
+
+</ContentPage>
