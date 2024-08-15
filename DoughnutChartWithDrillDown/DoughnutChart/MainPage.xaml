@@ -10,76 +10,61 @@
         <Border.StrokeShape>
             <RoundRectangle CornerRadius="14" />
         </Border.StrokeShape>
-        
-    <Grid>
-        
-        <chart:SfCircularChart Margin="{OnPlatform Default='10', iOS='-70, 10, 10, 10'}" >
-            
-            <chart:SfCircularChart.BindingContext>
-                <local:DataViewModel />
-            </chart:SfCircularChart.BindingContext>
 
-                <chart:SfCircularChart.Resources>
-                    <local:CenterViewDimension x:Key="dimension"/>
-                </chart:SfCircularChart.Resources>
+            <chart:SfCartesianChart x:Name="chart" IsTransposed="True" Margin="{OnPlatform iOS='-40, 0, 0, 0'}"
+                             HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" >
 
-            <chart:SfCircularChart.Title>
-                    <Grid ColumnSpacing="10" Margin="5, 0, 0, 0">
+                <chart:SfCartesianChart.BindingContext>
+                    <local:DataViewModel />
+                </chart:SfCartesianChart.BindingContext>
 
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
 
-                        <BoxView Color="#34ea61" WidthRequest="{OnPlatform Android=10, Default=15, iOS=10}" 
-                                                  HeightRequest="{OnPlatform Android=35, WinUI=80, MacCatalyst=50, iOS=35}"/>
+                <chart:SfCartesianChart.Title>
+                    <HorizontalStackLayout Margin="10, 5, 0, 5">
+                        <Image Source="worker.png" WidthRequest="50" HeightRequest="40" IsVisible="{OnPlatform Android=False, iOS=False}"/>
+                        <Label Text="Share of Workers in the United States by Broad Industry (2023)" VerticalOptions="Center"
+                        TextColor="DarkSlateGray" FontSize="{OnPlatform Android=18, Default=25, iOS=Small}" FontFamily="Bold"
+                        />
+                    </HorizontalStackLayout>
+                </chart:SfCartesianChart.Title>
 
-                    <VerticalStackLayout Grid.Column="1" Margin="{OnPlatform Android='-5, 0, 0, 0'}">
-                        <Label Text="Agriculture is the Biggest Employer in India" 
-                        FontSize="{OnPlatform Android=Small, Default=Large, iOS=Small}" FontAttributes="Bold"
-                        Grid.Row="0"/>
+                <chart:SfCartesianChart.XAxes >
+                    <chart:CategoryAxis ShowMajorGridLines="False" AutoScrollingDelta="{OnPlatform Android=5, iOS=5}">
+                        <chart:CategoryAxis.Title>
+                            <chart:ChartAxisTitle Text="Industries" />
+                        </chart:CategoryAxis.Title>
+                    </chart:CategoryAxis>
+                </chart:SfCartesianChart.XAxes>
 
-                        <Label Text="Share of workers in India, by broad industry of (2021-2022)" 
-                        TextColor="DarkSlateGray" FontSize="{OnPlatform Android=Micro, Default=Small, iOS=Small}"
-                        Grid.Row="1"/>
-                    </VerticalStackLayout>
+                <chart:SfCartesianChart.YAxes>
+                    <chart:NumericalAxis x:Name="yAxis" >
+                        <chart:NumericalAxis.Title>
+                            <chart:ChartAxisTitle Text="Total Employee Count" />
+                        </chart:NumericalAxis.Title>
+                    </chart:NumericalAxis>
+                </chart:SfCartesianChart.YAxes>
 
-                </Grid>
-            </chart:SfCircularChart.Title>
+                <chart:SfCartesianChart.ZoomPanBehavior>
+                    <chart:ChartZoomPanBehavior EnablePinchZooming="False" EnableDoubleTap="False"
+                                                EnableDirectionalZooming="False" EnableSelectionZooming="False"/>
+                </chart:SfCartesianChart.ZoomPanBehavior>
 
-            <chart:SfCircularChart.Legend>
-                    <chart:ChartLegend Placement="{OnPlatform Android=Bottom, Default=Right, iOS=Bottom}" />
-            </chart:SfCircularChart.Legend>
-            
-            <chart:DoughnutSeries ItemsSource="{Binding DataCollection}" 
+                <chart:ColumnSeries x:Name="series" Fill="#f79489"
+                          ItemsSource="{Binding DataCollection}" 
                          XBindingPath="Industry" 
                          YBindingPath="Percent"
-                         LabelContext="Percentage"
-                         InnerRadius="0.6"      
-                         ShowDataLabels="True"
-                         PaletteBrushes="{Binding CustomBrushes}">
+                          ShowDataLabels="True"
+                          >
 
-                <chart:DoughnutSeries.DataLabelSettings>
-                    <chart:CircularDataLabelSettings LabelPosition="Outside" />
-                </chart:DoughnutSeries.DataLabelSettings>
+                    <chart:ColumnSeries.DataLabelSettings>
+                        <chart:CartesianDataLabelSettings UseSeriesPalette="False" LabelPlacement="Outer"/>
+                    </chart:ColumnSeries.DataLabelSettings>
 
-                <chart:DoughnutSeries.CenterView>
-                        <StackLayout HeightRequest="{Binding CenterHoleSize, Converter={StaticResource dimension}}" WidthRequest="{Binding CenterHoleSize}" VerticalOptions="Center" HorizontalOptions="Center" Margin="{OnPlatform Default='0, -10, 0, 0', Android='0', MacCatalyst='0, 30, 0, 0', iOS='0'}">
-                        <Image Source="agri.png" WidthRequest="{OnPlatform Android=40, iOS=40, WinUI=60, MacCatalyst=150}" IsVisible="{OnPlatform Default='True', Android='False', iOS='False'}"/>
-                            <Label Text="Agriculture employs 45.5% of India's workforce" MaxLines="4" FontSize="{OnPlatform Android=12, iOS=12, MacCatalyst=18}" VerticalOptions="Center"
-                                  Margin="{OnPlatform Default='10, 0, 10, 0', MacCatalyst='0', Android='2, 27, 2, 0', iOS='0, 20, 0, 0'}" HorizontalTextAlignment="Center"
-                                  MaximumWidthRequest="{OnPlatform MacCatalyst=280, iOS=90}"/>
-                        </StackLayout>
-                    </chart:DoughnutSeries.CenterView>
+                    <chart:ColumnSeries.SelectionBehavior>
+                        <chart:DataPointSelectionBehavior SelectionChanging="DataPointSelectionBehavior_SelectionChanging"/>
+                    </chart:ColumnSeries.SelectionBehavior>
+                </chart:ColumnSeries>
 
-                <!--To enable the selection support-->
-                <chart:DoughnutSeries.SelectionBehavior>
-                    <chart:DataPointSelectionBehavior SelectionChanging="DataPointSelectionBehavior_SelectionChanging"/>
-                </chart:DoughnutSeries.SelectionBehavior>
-                
-            </chart:DoughnutSeries>
-            
-        </chart:SfCircularChart>
-    </Grid>
+            </chart:SfCartesianChart>
     </Border>
 </ContentPage>

@@ -3,49 +3,83 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="DoughnutChart.SecondaryPage"
              xmlns:chart="clr-namespace:Syncfusion.Maui.Charts;assembly=Syncfusion.Maui.Charts"
-             xmlns:local="clr-namespace:DoughnutChart">
+             xmlns:local="clr-namespace:DoughnutChart"
+             Title="Share of Workers in the United States (2023)">
 
-    <Grid>
-        <chart:SfCartesianChart x:Name="chart"
-                                HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" >
+            <chart:SfCircularChart Margin="{OnPlatform Default='10', iOS='-70, 10, 10, 10'}" >
 
-            <chart:SfCartesianChart.Title>
-                <Label x:Name="titleLabel"
-                    FontSize="{OnPlatform Android=15, Default=20, iOS=15}" 
-                    FontAttributes="Bold" 
-                    HorizontalTextAlignment="Center" />
-            </chart:SfCartesianChart.Title>
+            <chart:SfCircularChart.BindingContext>
+                <local:DataViewModel x:Name="viewModel"/>
+            </chart:SfCircularChart.BindingContext>
 
-            <chart:SfCartesianChart.XAxes >
-                <chart:CategoryAxis ShowMajorGridLines="False">
-                    <chart:CategoryAxis.Title>
-                        <chart:ChartAxisTitle Text="Category of persons" />
-                    </chart:CategoryAxis.Title>
-                </chart:CategoryAxis>
-            </chart:SfCartesianChart.XAxes>
+            <chart:SfCircularChart.Resources>
+                <local:BrushToColorConverter x:Key="brushToColor" />
+                <local:CenterViewDimension x:Key="dimension"/>
+                <local:TooltipTemplate x:Key="tooltipTemplate"/>
+            </chart:SfCircularChart.Resources>
 
-            <chart:SfCartesianChart.YAxes>
-                <chart:NumericalAxis x:Name="yAxis" Maximum="{OnPlatform Default=70, Android=80, iOS=80}" Interval="{OnPlatform WinUI=10}">
-                    <chart:NumericalAxis.Title>
-                        <chart:ChartAxisTitle Text="Percentage" />
-                    </chart:NumericalAxis.Title>
-                </chart:NumericalAxis>
-            </chart:SfCartesianChart.YAxes>
+            <chart:SfCircularChart.Legend>
+                <chart:ChartLegend Placement="{OnPlatform Android=Bottom, Default=Bottom, iOS=Bottom}" >
+                    <chart:ChartLegend.ItemTemplate>
+                        <DataTemplate>
+                            <HorizontalStackLayout Margin="0, 0, 0, 0">
+                                <Path Data="{Binding Item.Path}" WidthRequest="50" HeightRequest="50"  Fill="{Binding IconBrush,Converter={StaticResource brushToColor}}"
+                                       Margin="5,0,0,0" />
+                                <Label Text="{Binding Text}" FontSize="15" VerticalOptions="Center" TextColor="Black" VerticalTextAlignment="Center" Margin="-15, -10, 0, 0"/>
+                            </HorizontalStackLayout>
+                        </DataTemplate>
+                    </chart:ChartLegend.ItemTemplate>
+                </chart:ChartLegend>
+            </chart:SfCircularChart.Legend>
 
-            <chart:ColumnSeries x:Name="series"
-                             XBindingPath="Gender"
-                             YBindingPath="Percent"
-                             LabelContext="Percentage"
-                             ShowDataLabels="True"
-                             ItemsSource="{Binding Collections}"
-                             Width="0.2" >
+            <chart:SfCircularChart.TooltipBehavior>
+                <chart:ChartTooltipBehavior/>
+            </chart:SfCircularChart.TooltipBehavior>
 
-                <chart:ColumnSeries.DataLabelSettings>
-                    <chart:CartesianDataLabelSettings UseSeriesPalette="False" LabelPlacement="Outer" />
-                </chart:ColumnSeries.DataLabelSettings>
-            </chart:ColumnSeries>
+            <chart:RadialBarSeries ItemsSource="{Binding EmployeeCollection}" CapStyle="BothCurve" GapRatio="0.4"
+                                   TrackFill="#E7E0EC"
+                         XBindingPath="Gender" x:Name="series" Radius="{OnPlatform Default=0.8, Android=1, iOS=1}"
+                         InnerRadius="0.6"    EnableTooltip="True"  
+                         ShowDataLabels="True"
+                         PaletteBrushes="{Binding CustomBrushes}" LegendIcon="SeriesType">
+                <chart:RadialBarSeries.TooltipTemplate>
+                    <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <!--<Image Source="{Binding . , Converter={StaticResource tooltipTemplate}, ConverterParameter=image}" HeightRequest="50" WidthRequest="50"/>-->
+                            <Path Data="{Binding . , Converter={StaticResource tooltipTemplate}, ConverterParameter=image}" WidthRequest="50" HeightRequest="50" Margin="0, 10, 0, 0"  Fill="White"
+                                                    />
+                            <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Margin="{OnPlatform Default='0, -5, 0, 0', Android='0, -20, 0, 0'}">
+                                    <Label Text="{Binding . , Converter={StaticResource tooltipTemplate}, ConverterParameter=yValue}" TextColor="White" LineBreakMode="NoWrap"/>
+                                    <Label Text="{Binding . , Converter={StaticResource tooltipTemplate}, ConverterParameter=percent, StringFormat='{0}%'}" TextColor="White" LineBreakMode="NoWrap"/>
+                                </VerticalStackLayout>
+                            </Grid>
+                    </DataTemplate>
+                </chart:RadialBarSeries.TooltipTemplate>
 
-        </chart:SfCartesianChart>
-    </Grid>
+                <chart:RadialBarSeries.CenterView>
+                    <StackLayout HeightRequest="{Binding CenterHoleSize, Converter={StaticResource dimension}}"
+                                 WidthRequest="{Binding CenterHoleSize}" VerticalOptions="Center" HorizontalOptions="Center"
+                                 Margin="{OnPlatform Default='0, -10, 0, 0', Android='0, 0, 0, 0', MacCatalyst='0, 30, 0, 0', iOS='0'}"
+                                 >
+                        <Image Source="{Binding Source={x:Reference viewModel}, Path=ImageName}" 
+                               WidthRequest="{OnPlatform Android=40, iOS=40, WinUI=60, MacCatalyst=80}" 
+                               HeightRequest="{OnPlatform Android=40, iOS=40, WinUI=60, MacCatalyst=80}" 
+                               />
+                        <Label x:Name="centerView" MaxLines="4" FontSize="{OnPlatform Android=12, iOS=12, MacCatalyst=20, WinUI=18}"
+                               VerticalOptions="Center"
+                                  Margin="{OnPlatform Default='10, 4, 10, 0', MacCatalyst='0', Android='2, 0, -5, 0', iOS='0'}"
+                               HorizontalTextAlignment="Center"
+                                  MaximumWidthRequest="{OnPlatform MacCatalyst=280, iOS=90}"/>
+                    </StackLayout>
+
+                </chart:RadialBarSeries.CenterView>
+                
+            </chart:RadialBarSeries>
+            
+        </chart:SfCircularChart>
 
 </ContentPage>

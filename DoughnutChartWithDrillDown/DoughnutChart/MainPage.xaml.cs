@@ -1,5 +1,4 @@
-﻿
-using Syncfusion.Maui.Charts;
+﻿using Syncfusion.Maui.Charts;
 using System.Collections;
 using System.Globalization;
 
@@ -14,21 +13,21 @@ namespace DoughnutChart
 
         private void DataPointSelectionBehavior_SelectionChanging(object sender, ChartSelectionChangingEventArgs e)
         {
-            var series = sender as DoughnutSeries;
+            var series = sender as ColumnSeries;
             int selectedIndex = e.NewIndexes[0];
 
             if (series == null || series.ItemsSource is not IList items)
             {
                 return;
             }
-            
+
             //Get selected segment data
             var selectedData = items[selectedIndex] as DataModel;
 
             if (selectedData != null)
             {
                 // Navigate to the next page which is representing the chart with details.
-                Navigation.PushAsync(new SecondaryPage(selectedData, series.PaletteBrushes[selectedIndex]));
+                Navigation.PushAsync(new SecondaryPage(selectedData));
                 e.Cancel = true;
             }
         }
@@ -47,8 +46,8 @@ namespace DoughnutChart
 
             string? para = value.ToString();
 
-#if MACCATALYST
-            if(string.IsNullOrEmpty(para) && double.TryParse(para, out size))
+#if !WINDOWS
+            if(!string.IsNullOrEmpty(para) && double.TryParse(para, out size))
             {
                 return (double)value / 2;
             }
@@ -62,5 +61,4 @@ namespace DoughnutChart
             throw new NotImplementedException();
         }
     }
-
 }
