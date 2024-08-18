@@ -61,7 +61,7 @@ namespace DoughnutChart
             var value = GetYValue(viewModel, index, path);
             if (value is double yValue && viewModel.Data != null)
             {
-                var percent = (yValue / viewModel.Data.Percent) * 100;
+                var percent = (yValue / viewModel.Data.EmployeeCount) * 100;
                 return Math.Round(percent, 2);
             }
             return value;

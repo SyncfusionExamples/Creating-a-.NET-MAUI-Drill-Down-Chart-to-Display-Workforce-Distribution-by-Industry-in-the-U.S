@@ -52,7 +52,7 @@
                 <chart:ColumnSeries x:Name="series" Fill="#f79489"
                           ItemsSource="{Binding DataCollection}" 
                          XBindingPath="Industry" 
-                         YBindingPath="Percent"
+                         YBindingPath="EmployeeCount"
                           ShowDataLabels="True"
                           >
 

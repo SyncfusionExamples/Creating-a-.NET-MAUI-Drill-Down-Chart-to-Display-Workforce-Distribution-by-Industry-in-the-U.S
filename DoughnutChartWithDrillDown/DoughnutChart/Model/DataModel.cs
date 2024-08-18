@@ -5,14 +5,14 @@ namespace DoughnutChart
     public class DataModel
     {
         public string Industry { get; set; } = string.Empty;
-        public double Percent {get; set;}
+        public double EmployeeCount {get; set;}
         public double Male {get; set;}
         public double Female {get; set;}
 
-        public DataModel(string industry, double percent, double male, double female)
+        public DataModel(string industry, double employeeCount, double male, double female)
         {
             Industry = industry;
-            Percent = percent;
+            EmployeeCount = employeeCount;
             Male = male;
             Female = female;
         }
