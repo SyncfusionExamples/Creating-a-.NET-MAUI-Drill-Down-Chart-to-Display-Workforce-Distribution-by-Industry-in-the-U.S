@@ -30,4 +30,4 @@ The chart below provides a clear visualization of workforce distribution across 
 
 If you are facing a path too long exception when building this example project, close Visual Studio and rename the repository to a shorter name before building the project.
 
-For a step-by-step procedure, refer to the [Visualize workforce distribution across various industries blog with drill down]().
+For a step-by-step procedure, refer to the [Visualize workforce distribution across various industries blog with drill down](https://www.syncfusion.com/blogs/post/maui-drilldown-chart-to-view-workforce-data).
